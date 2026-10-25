@@ -4,7 +4,7 @@ import {
   rmSync
 } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { openCreatorLanguages } from '@opencreator/protocol';
 import {
@@ -36,34 +36,34 @@ describe('OpenCreator config', () => {
   });
 
   it('resolves the product-owned directory layout', () => {
-    expect(resolveOpenCreatorPaths({ homeDir: '/Users/demo', env: {} })).toMatchObject({
-      root: '/Users/demo/.videocreator',
-      configFile: '/Users/demo/.videocreator/config.toml',
-      dataDir: '/Users/demo/.videocreator/data',
-      codexHome: '/Users/demo/.videocreator/runtime/codex',
-      creatorCodexHome: '/Users/demo/.videocreator/runtime/creator-codex'
+    expect(resolveOpenCreatorPaths({ homeDir: resolve('/Users/demo'), env: {} })).toMatchObject({
+      root: resolve('/Users/demo/.videocreator'),
+      configFile: resolve('/Users/demo/.videocreator/config.toml'),
+      dataDir: resolve('/Users/demo/.videocreator/data'),
+      codexHome: resolve('/Users/demo/.videocreator/runtime/codex'),
+      creatorCodexHome: resolve('/Users/demo/.videocreator/runtime/creator-codex')
     });
   });
 
   it('isolates development state below the product directory', () => {
     expect(resolveOpenCreatorPaths({
-      homeDir: '/Users/demo',
+      homeDir: resolve('/Users/demo'),
       env: {},
       runtimeChannel: 'development'
     })).toMatchObject({
-      root: '/Users/demo/.videocreator/development',
-      configFile: '/Users/demo/.videocreator/development/config.toml',
-      dataDir: '/Users/demo/.videocreator/development/data',
-      codexHome: '/Users/demo/.videocreator/development/runtime/codex'
+      root: resolve('/Users/demo/.videocreator/development'),
+      configFile: resolve('/Users/demo/.videocreator/development/config.toml'),
+      dataDir: resolve('/Users/demo/.videocreator/development/data'),
+      codexHome: resolve('/Users/demo/.videocreator/development/runtime/codex')
     });
   });
 
   it('keeps an explicit product home authoritative in development', () => {
     expect(resolveOpenCreatorPaths({
-      homeDir: '/Users/demo',
-      env: { OPENCREATOR_HOME: '/tmp/opencreator-explicit' },
+      homeDir: resolve('/Users/demo'),
+      env: { OPENCREATOR_HOME: resolve('/tmp/opencreator-explicit') },
       runtimeChannel: 'development'
-    }).root).toBe('/tmp/opencreator-explicit');
+    }).root).toBe(resolve('/tmp/opencreator-explicit'));
   });
 
   it('creates OpenCreator settings from an empty product directory', () => {
