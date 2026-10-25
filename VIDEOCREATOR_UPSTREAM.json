@@ -1,0 +1,9 @@
+{
+  "product": "videoCreator",
+  "upstream": "https://github.com/krillinai/OpenCreator",
+  "tag": "v3.2.9",
+  "commit": "cb4f7fcf72b6f9061257350779891432c63cdced",
+  "license": "Apache-2.0",
+  "facebookPublishing": false,
+  "status": "source customization; Windows installer not yet validated"
+}

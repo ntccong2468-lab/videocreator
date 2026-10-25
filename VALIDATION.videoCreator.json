@@ -1,0 +1,28 @@
+{
+  "upstream_tag": "v3.2.9",
+  "upstream_commit": "cb4f7fcf72b6f9061257350779891432c63cdced",
+  "checks": {
+    "config_tests": 52,
+    "web_targeted_tests": 52,
+    "desktop_targeted_tests": 19,
+    "web_typecheck": "passed",
+    "desktop_typecheck": "passed",
+    "desktop_main_preload_bootstrap_build": "passed",
+    "web_build": "passed",
+    "packaging_script_syntax": "passed",
+    "git_diff_check": "passed",
+    "fork_packaging_regression_tests": 2,
+    "windows_x64_runtime_cross_compile": "passed; CLI and server only, not GUI installer"
+  },
+  "unverified": [
+    "Windows installer packaging and packaged app smoke tests",
+    "Actual downloads, translation and dubbing with configured services",
+    "Cloud service authorization callbacks with videocreator protocol",
+    "Windows GUI installer requires native Windows build and smoke tests"
+  ],
+  "facebook_publishing": false,
+  "note": "Source customization only. Some upstream branding, icons and service labels remain.",
+  "known_limitations": [
+    "Five pre-existing release-promotion CLI tests failed in this sandbox with empty child-process output; fork installer staging regression tests passed."
+  ]
+}
