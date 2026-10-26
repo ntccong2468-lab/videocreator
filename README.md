@@ -16,6 +16,14 @@
 
 Mã nguồn miễn phí. Dịch vụ AI, API và model bên thứ ba có thể có chi phí hoặc điều kiện sử dụng riêng. Bản hiện tại chưa tích hợp tự động đăng Facebook.
 
+## Link video
+
+Phần tải video và dịch/lồng tiếng nhận link HTTP/HTTPS công khai qua bộ phân tích yt-dlp, gồm Bilibili.tv, Vimeo, các mạng xã hội và link media trực tiếp. Không còn giới hạn ở danh sách 10 nền tảng trước đây. Tham số truy cập trong link được giữ nguyên.
+
+Ví dụ: `https://www.bilibili.tv/en/video/4801343148661760?bstar_from=bstar-web.homepage.recommend.all`.
+
+Việc nhận link không bảo đảm mọi video đều tải được: nguồn có thể yêu cầu đăng nhập, chặn khu vực, có DRM hoặc không có luồng video mà bộ phân tích hỗ trợ. Khi kiểm tra link Bilibili.tv mẫu, nền tảng trả về giới hạn bản quyền theo khu vực.
+
 ## Windows x64
 
 Khuyến nghị Windows 10/11, RAM 16 GB trở lên. Có thể dùng nhận dạng CPU hoặc dịch vụ nhận dạng online; không bắt buộc card NVIDIA cho cấu hình này. Không phải mọi model AI đều hỗ trợ CPU.

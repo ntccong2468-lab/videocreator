@@ -332,3 +332,11 @@ describe('VideoSourcePreview', () => {
     expect(onClear).toHaveBeenCalledOnce();
   });
 });
+
+ it('resolves the international Bilibili link without requiring a China video ID or part', async () => {
+  const url='https://www.bilibili.tv/en/video/4801343148661760?bstar_from=bstar-web.homepage.recommend.all';
+  const getVideoMetadata=vi.fn(async()=>({platform:'generic' as const,title:'International video',previewUrl:'https://cdn.example.org/preview.mp4'}));
+  render(<VideoSourcePreview file={null} sourceType="url" url={url} onChooseFile={vi.fn()} onClear={vi.fn()} metadataService={{getVideoMetadata}} />);
+  await waitFor(()=>expect(getVideoMetadata).toHaveBeenCalledWith(url));
+  await waitFor(()=>expect(document.querySelector('video')?.getAttribute('src')).toBe('https://cdn.example.org/preview.mp4'));
+ });

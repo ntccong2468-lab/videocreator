@@ -22,6 +22,8 @@ beforeEach(() => {
 describe('video download link batches', () => {
   it('accepts one URL or Douyin share text and rejects multiple or unsupported URLs', () => {
     expect(parseDownloadLink(` ${firstUrl} `)).toEqual({ url: firstUrl });
+    const international = 'https://www.bilibili.tv/en/video/4801343148661760?bstar_from=bstar-web.homepage.recommend.all';
+    expect(parseDownloadLink(international)).toEqual({url: international});
     expect(parseDownloadLink('https://www.reddit.com/r/claude/s/R5I7tDfJ0h')).toEqual({ url: 'https://www.reddit.com/r/claude/s/R5I7tDfJ0h' });
     expect(parseDownloadLink('分享\nhttps://v.douyin.com/example/\n复制链接')).toEqual({ url: 'https://v.douyin.com/example/' });
     for (const separator of ['\n', ' ', '']) {
@@ -29,7 +31,7 @@ describe('video download link batches', () => {
     }
     expect(parseDownloadLink(`${firstUrl}\n${firstUrl}`)).toEqual({ error: 'multiple' });
     expect(parseDownloadLink('分享 https://v.douyin.com/example/ 和 https://example.com')).toEqual({ error: 'multiple' });
-    for (const value of ['', 'ftp://example.com/video', 'https://example.com']) {
+    for (const value of ['', 'ftp://example.com/video', 'https://localhost/video']) {
       expect(parseDownloadLink(value)).toEqual({ error: 'invalid' });
     }
   });
@@ -117,7 +119,7 @@ describe('video download link batches', () => {
     const harness = setup(makeJob('pending:project:video-download'));
     const input = screen.getByRole('textbox', { name: '视频链接' });
     expect(screen.queryByRole('button', { name: '清空链接' })).not.toBeInTheDocument();
-    fireEvent.change(input, { target: { value: 'https://example.com' } });
+    fireEvent.change(input, { target: { value: 'https://localhost/video' } });
     fireEvent.blur(input);
     expect(await screen.findByRole('alert')).toHaveTextContent('请输入支持的公开视频链接');
 
@@ -153,7 +155,7 @@ describe('video download link batches', () => {
   it('disables analysis for invalid or multiple links and waits for blur to show validation errors', () => {
     const harness = setup(makeJob('pending:project:video-download'));
     const input = screen.getByRole('textbox', { name: '视频链接' });
-    for (const value of ['https://', 'https://example.com', 'https://youtube.com.example.com/watch?v=test', `${firstUrl} ${secondUrl}`]) {
+    for (const value of ['https://', 'https://localhost/video', 'file:///tmp/source.mp4', `${firstUrl} ${secondUrl}`]) {
       fireEvent.change(input, { target: { value } });
       expect(screen.queryByRole('status', { name: '链接格式有效' })).not.toBeInTheDocument();
       expect(screen.getByRole('button', { name: '获取' })).toBeDisabled();

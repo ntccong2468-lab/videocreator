@@ -30,14 +30,14 @@ jobs:
           node-version: 22
       - uses: actions/download-artifact@v4
         with:
-          name: videoCreator-3.2.9-vn.1-windows-x64
+          name: videoCreator-3.2.9-vn.2-windows-x64
           run-id: ${{ inputs.build_run_id }}
           github-token: ${{ github.token }}
           path: release-input
       - name: Verify installer checksums and source commit
         env:
           EXPECTED_BUILD_SHA: ${{ steps.build.outputs.sha }}
-        run: node scripts/verify-videocreator-release.mjs release-input "$EXPECTED_BUILD_SHA" 3.2.9-vn.1
+        run: node scripts/verify-videocreator-release.mjs release-input "$EXPECTED_BUILD_SHA" 3.2.9-vn.2
       - name: Publish installer and optional rendering component
         env:
           GH_TOKEN: ${{ github.token }}
@@ -46,21 +46,24 @@ jobs:
         run: |
           set -euo pipefail
           cat > release-notes.txt <<'EOF'
-          # videoCreator VN 3.2.9-vn.1
+          # videoCreator VN 3.2.9-vn.2
 
           Customized by Nguyễn Thành Công.
 
-          - New white VN logo on a black background for the application, installer and tray.
+          - White VN logo on a black background for the application, installer and tray.
           - Product introduction and author information updated for Nguyễn Thành Công.
-          - Video downloading, translation, subtitles and dubbing workflows.
+          - Extractor-based public HTTP/HTTPS video URLs for downloading, translation and dubbing, including Bilibili.tv and direct media links.
+          - Vietnamese defaults and desktop startup text.
+          - Clear reporting of Bilibili.tv regional restrictions.
+          - Actual availability still depends on the source, access permissions and DRM.
 
-          Download and run videoCreator-3.2.9-vn.1-win-x64.exe on Windows x64.
+          Download and run videoCreator-3.2.9-vn.2-win-x64.exe on Windows x64.
           AI services and models require separate configuration and may have their own fees.
           The Remotion archive is an optional component downloaded by the app when needed.
           Third-party license and copyright notices are included.
           EOF
-          mapfile -t installers < <(find release-input -name 'videoCreator-3.2.9-vn.1-win-x64.exe' -type f)
-          mapfile -t components < <(find release-input -name 'Remotion-3.2.9-vn.1-win32-x64.tar.gz' -type f)
+          mapfile -t installers < <(find release-input -name 'videoCreator-3.2.9-vn.2-win-x64.exe' -type f)
+          mapfile -t components < <(find release-input -name 'Remotion-3.2.9-vn.2-win32-x64.tar.gz' -type f)
           test "${#installers[@]}" -eq 1
           test "${#components[@]}" -eq 1
-          gh release create v3.2.9-vn.1 "${installers[0]}" "${components[0]}" release-input/SHA256SUMS.txt --repo "$GITHUB_REPOSITORY" --target "$EXPECTED_BUILD_SHA" --title 'videoCreator VN 3.2.9-vn.1 — Nguyễn Thành Công' --notes-file release-notes.txt --latest
+          gh release create v3.2.9-vn.2 "${installers[0]}" "${components[0]}" release-input/SHA256SUMS.txt --repo "$GITHUB_REPOSITORY" --target "$EXPECTED_BUILD_SHA" --title 'videoCreator VN 3.2.9-vn.2 — Nguyễn Thành Công' --notes-file release-notes.txt --latest

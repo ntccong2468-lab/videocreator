@@ -230,6 +230,9 @@ func TestAdditionalPlatformMediaDownloads(t *testing.T) {
 	}
 	storage.YtdlpPath, storage.YtdlpPrefixArgs, storage.FfmpegPath, config.Conf.App.Proxy = downloader, nil, "/custom/ffmpeg", "http://127.0.0.1:7897"
 	for _, link := range []string{
+		"https://www.bilibili.tv/en/video/4801343148661760?bstar_from=bstar-web.homepage.recommend.all",
+		"https://vimeo.com/12345678",
+		"http://cdn.example.org/source.mkv?signature=sample",
 		"https://x.com/creator/status/123",
 		"https://www.tiktok.com/@creator/video/123",
 		"https://vm.tiktok.com/abc123/",
@@ -278,8 +281,8 @@ func TestAdditionalPlatformMediaDownloads(t *testing.T) {
 }
 
 func TestAdditionalPlatformRejectsUnsupportedSources(t *testing.T) {
-	for _, link := range []string{"https://www.instagram.com/creator/", "https://www.pinterest.com/creator/",
-		"https://notpinterest.com/pin/123/", "https://instagram.com.example.com/reel/abc/", "http://www.instagram.com/reel/abc/"} {
+	for _, link := range []string{"https://10.0.0.1/video", "https://[::1]/video",
+		"file:///tmp/video.mp4", "http://127.0.0.1/video", "https://localhost/video"} {
 		if isAdditionalVideoSource(link) {
 			t.Fatalf("accepted unsupported source: %s", link)
 		}

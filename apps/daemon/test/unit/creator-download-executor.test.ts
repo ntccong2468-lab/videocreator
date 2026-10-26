@@ -244,11 +244,7 @@ describe('creator download executor', () => {
     await mkdir(workdir, { recursive: true });
     await executor.run(stageInput({ workdir, stageId: 'probe', state: { sourceUrl } }));
     expect(JSON.parse(await readFile(join(workdir, 'args.json'), 'utf8'))).toContain(sourceUrl);
-    for (const invalidUrl of [
-      'https://www.pinterest.com/creator/',
-      'https://www.pinterest.com/pin/not-a-pin/',
-      'https://notpinterest.com/pin/6544361954284154/'
-    ]) {
+    for (const invalidUrl of ['https://localhost/video', 'file:///tmp/source.mp4', 'http://127.0.0.1/video']) {
       await expect(executor.run(stageInput({
         workdir, stageId: 'probe', state: { sourceUrl: invalidUrl }
       }))).rejects.toMatchObject({ code: 'unsupported_source' });
@@ -308,7 +304,7 @@ describe('creator download executor', () => {
     ]));
   });
 
-  it('preserves Xiaohongshu note tokens for probe and download but rejects profiles and lookalike hosts', async () => {
+  it('preserves Xiaohongshu note tokens for probe and download but blocks unsafe source URLs', async () => {
     const binaries = await fakeBinaries();
     const executor = createDownloadExecutor(binaries);
     const workdir = join(tempDir, 'xiaohongshu');
@@ -350,11 +346,7 @@ describe('creator download executor', () => {
     ]));
     expect(audio.outputs).toEqual([expect.objectContaining({ kind: 'source_audio' })]);
 
-    for (const invalidUrl of [
-      'https://www.xiaohongshu.com/user/profile/6a9149f3000000001f01d20a',
-      'https://notxiaohongshu.com/explore/6a9149f3000000001f01d20a',
-      'https://www.xiaohongshu.com/explore/not-a-note'
-    ]) {
+    for (const invalidUrl of ['https://localhost/video', 'file:///tmp/source.mp4', 'http://127.0.0.1/video']) {
       await expect(executor.run(stageInput({
         workdir, stageId: 'probe', state: { sourceUrl: invalidUrl }
       }))).rejects.toMatchObject({ code: 'unsupported_source' });
@@ -496,7 +488,7 @@ describe('creator download executor', () => {
     }
   });
 
-  it('passes Facebook videos, reels and short links to yt-dlp but rejects profiles and impostors', async () => {
+  it('passes Facebook videos, reels and short links to yt-dlp but blocks unsafe source URLs', async () => {
     const binaries = await fakeBinaries();
     const executor = createDownloadExecutor(binaries);
     for (const [index, url] of [
@@ -512,19 +504,14 @@ describe('creator download executor', () => {
       const args = JSON.parse(await readFile(join(workdir, 'args.json'), 'utf8')) as string[];
       expect(args).toContain(url);
     }
-    for (const url of [
-      'https://www.facebook.com/creator',
-      'https://www.facebook.com/watch/',
-      'https://notfacebook.com/reel/123',
-      'https://fb.watch/'
-    ]) {
+    for (const url of ['https://localhost/video', 'file:///tmp/source.mp4', 'http://127.0.0.1/video']) {
       await expect(executor.run(stageInput({
         workdir: tempDir, stageId: 'probe', state: { sourceUrl: url }
       }))).rejects.toMatchObject({ code: 'unsupported_source' });
     }
   });
 
-  it('passes Douyin videos and short links to yt-dlp but rejects profiles and lookalike hosts', async () => {
+  it('passes Douyin videos and short links to yt-dlp but blocks unsafe source URLs', async () => {
     const binaries = await fakeBinaries();
     const executor = createDownloadExecutor(binaries);
     for (const [index, url] of [
@@ -538,11 +525,7 @@ describe('creator download executor', () => {
       const args = JSON.parse(await readFile(join(workdir, 'args.json'), 'utf8')) as string[];
       expect(args).toContain(url);
     }
-    for (const url of [
-      'https://www.douyin.com/user/creator',
-      'https://notdouyin.com/video/123',
-      'https://v.douyin.com/'
-    ]) {
+    for (const url of ['https://localhost/video', 'file:///tmp/source.mp4', 'http://127.0.0.1/video']) {
       await expect(executor.run(stageInput({
         workdir: tempDir, stageId: 'probe', state: { sourceUrl: url }
       }))).rejects.toMatchObject({ code: 'unsupported_source' });
@@ -578,16 +561,10 @@ describe('creator download executor', () => {
     expect(args).not.toContain(sourceUrl);
   });
 
-  it('rejects a Douyin jingxuan page without a numeric modal id', async () => {
+  it('rejects unsafe source URLs before invoking the extractor', async () => {
     const binaries = await fakeBinaries();
     const executor = createDownloadExecutor(binaries);
-    for (const sourceUrl of [
-      'https://www.douyin.com/jingxuan',
-      'https://www.douyin.com/jingxuan?modal_id=abc',
-      'https://www.douyin.com/jingxuan/search/qianjidong',
-      'https://www.douyin.com/jingxuan/search/qianjidong?modal_id=abc',
-      'https://notdouyin.com/jingxuan?modal_id=123'
-    ]) {
+    for (const sourceUrl of ['https://localhost/video', 'file:///tmp/source.mp4', 'http://127.0.0.1/video']) {
       await expect(executor.run(stageInput({
         workdir: tempDir, stageId: 'probe', state: { sourceUrl }
       }))).rejects.toMatchObject({ code: 'unsupported_source' });
@@ -668,7 +645,7 @@ describe('creator download executor', () => {
     expect(probe.options).toEqual([]);
   });
 
-  it('passes Instagram reels and posts to yt-dlp but rejects profiles and lookalike hosts', async () => {
+  it('passes Instagram reels and posts to yt-dlp but blocks unsafe source URLs', async () => {
     const binaries = await fakeBinaries();
     const executor = createDownloadExecutor(binaries);
     for (const [index, url] of [
@@ -682,18 +659,14 @@ describe('creator download executor', () => {
       const args = JSON.parse(await readFile(join(workdir, 'args.json'), 'utf8')) as string[];
       expect(args).toContain(url);
     }
-    for (const url of [
-      'https://www.instagram.com/creator/',
-      'https://notinstagram.com/reel/abc123/',
-      'https://www.instagram.com/stories/creator/123/'
-    ]) {
+    for (const url of ['https://localhost/video', 'file:///tmp/source.mp4', 'http://127.0.0.1/video']) {
       await expect(executor.run(stageInput({
         workdir: tempDir, stageId: 'probe', state: { sourceUrl: url }
       }))).rejects.toMatchObject({ code: 'unsupported_source' });
     }
   });
 
-  it('passes TikTok video and short URLs to yt-dlp, but rejects profiles and lookalike hosts', async () => {
+  it('passes TikTok video and short URLs to yt-dlp, but blocks unsafe source URLs', async () => {
     const binaries = await fakeBinaries();
     const executor = createDownloadExecutor(binaries);
     const urls = [
@@ -709,7 +682,7 @@ describe('creator download executor', () => {
       const args = JSON.parse(await readFile(join(workdir, 'args.json'), 'utf8')) as string[];
       expect(args).toContain(url);
     }
-    for (const url of ['https://www.tiktok.com/@creator', 'https://not-tiktok.com/@creator/video/123']) {
+    for (const url of ['https://localhost/video', 'file:///tmp/source.mp4', 'http://127.0.0.1/video']) {
       await expect(executor.run(stageInput({
         workdir: tempDir, stageId: 'probe', state: { sourceUrl: url }
       }))).rejects.toMatchObject({ code: 'unsupported_source' });
@@ -1509,7 +1482,7 @@ describe('creator download executor', () => {
     }))).rejects.toMatchObject({ publicFacts: { kind: 'not-found' } });
   });
 
-  it('rejects misleading domains that only end with a supported domain name', async () => {
+  it('rejects private source URLs before invoking the extractor', async () => {
     const config = createDefaultCreatorServicesConfig();
     const executor = createDownloadExecutor({
       configStore: { read: async () => config },
@@ -1522,7 +1495,7 @@ describe('creator download executor', () => {
       workdir: '/tmp',
       stageId: 'probe',
       state: {
-        sourceUrl: 'https://notyoutube.com/watch?v=demo'
+        sourceUrl: 'https://127.0.0.1/watch?v=demo'
       }
     }))).rejects.toMatchObject({ code: 'unsupported_source' });
 
@@ -1915,3 +1888,26 @@ function previewInput(input: {
   }];
   return stage;
 }
+
+ it('delegates Bilibili.tv and public direct URLs without pretending they are YouTube', async () => {
+  for (const sourceUrl of ['https://www.bilibili.tv/en/video/4801343148661760?bstar_from=bstar-web.homepage.recommend.all', 'http://cdn.example.org/video.mkv?token=sample']) {
+    const parsed = parseDownloadProbe({id:'4801343148661760',title:'International video',extractor_key:'BiliIntl',webpage_url:sourceUrl,formats:[{format_id:'main',ext:'mp4',vcodec:'h264',acodec:'aac',height:720}]}, sourceUrl);
+    expect(parsed.platform).toBe('generic');
+    expect(parsed.options.some(option=>option.mediaType==='video')).toBe(true);
+    const executor = createDownloadExecutor(await fakeBinaries());
+    const workdir = join(tempDir,'international'); await mkdir(workdir,{recursive:true});
+    await executor.run(stageInput({workdir,stageId:'probe',state:{sourceUrl}}));
+    expect(JSON.parse(await readFile(join(workdir,'args.json'),'utf8'))).toContain(sourceUrl);
+  }
+ });
+
+ it('reports the Bilibili.tv regional restriction instead of an opaque extractor crash', async () => {
+  const executor = createDownloadExecutor(await fakeBinaries({failure: "WARNING: [BiliIntl] Unable to download video formats: BiliIntl said: 版权地区受限\nERROR: 'NoneType' object is not subscriptable"}));
+  await expect(executor.run(stageInput({workdir:tempDir,stageId:'probe',state:{sourceUrl:'https://www.bilibili.tv/en/video/4801343148661760'}}))).rejects.toMatchObject({code:'region_or_copyright_restricted'});
+ });
+
+ it('offers a direct MKV source even when the extractor has not probed its codecs', () => {
+  const probe = parseDownloadProbe({id:'direct',title:'Direct video',extractor_key:'Generic',formats:[{format_id:'http',ext:'mkv'}]}, 'https://cdn.example.org/video.mkv?signature=sample');
+  expect(probe.platform).toBe('generic');
+  expect(probe.options).toEqual(expect.arrayContaining([expect.objectContaining({mediaType:'video',videoFormatId:'http'}),expect.objectContaining({mediaType:'audio',transcode:'mp3'})]));
+ });

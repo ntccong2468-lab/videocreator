@@ -2082,6 +2082,8 @@ function writeOpenCreatorConfig(
     join(productHome, 'config.toml'),
     [
       'version = 1',
+      '[ui]',
+      'language = "zh-CN"',
       '',
       '[desktop]',
       'close_behavior = "quit"',

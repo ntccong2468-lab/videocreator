@@ -65,7 +65,7 @@ export function parseVideoSource(value: string): VideoSource {
           ...(partIndex === undefined ? {} : { partIndex })
         };
       }
-      return { kind: 'invalid', label: trimmed };
+      // Other Bilibili routes (including series) are analyzed by yt-dlp.
     }
 
     if (/\.(?:mp4|webm|mov|m4v)(?:$|[?#])/i.test(`${url.pathname}${url.search}${url.hash}`)) {

@@ -36,7 +36,7 @@ jobs:
       - name: Upload installer and build manifest
         uses: actions/upload-artifact@v4
         with:
-          name: videoCreator-3.2.9-vn.1-windows-x64
+          name: videoCreator-3.2.9-vn.2-windows-x64
           if-no-files-found: error
           path: |
             apps/desktop/release/videoCreator-*.exe

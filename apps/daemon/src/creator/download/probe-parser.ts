@@ -98,7 +98,9 @@ function parseSingleDownloadProbe(value: unknown, requestedUrl: string): Downloa
         : /^instagram(?::|$)/i.test(extractor) ? 'instagram'
           : /^facebook(?::|$)/i.test(extractor) ? 'facebook'
             : /^xiaohongshu(?::|$)/i.test(extractor) ? 'xiaohongshu'
-              : /^pinterest(?::|$)/i.test(extractor) ? 'pinterest' : 'youtube';
+              : /^pinterest(?::|$)/i.test(extractor) ? 'pinterest'
+                : /^youtube(?::|$)/i.test(extractor) ? 'youtube'
+                  : supportedVideoSourcePlatform(requestedUrl) ?? 'generic';
   const formats: DownloadProbeFormat[] = parsed.formats.map(format => ({
     id: format.format_id,
     ext: format.ext ?? null,
@@ -111,8 +113,8 @@ function parseSingleDownloadProbe(value: unknown, requestedUrl: string): Downloa
     bytes: format.filesize ?? format.filesize_approx ?? null,
     language: normalizeLanguage(format.language ?? parsed.language),
     languagePreference: format.language_preference ?? null,
-    hasVideo: hasCodec(format.vcodec),
-    hasAudio: hasCodec(format.acodec)
+    hasVideo: hasCodec(format.vcodec) || isUnprobedVideoContainer(format),
+    hasAudio: hasCodec(format.acodec) || isUnprobedVideoContainer(format)
   }));
   return {
     id: parsed.id,
@@ -317,6 +319,13 @@ function largestDimension(
     .map(format => format[key])
     .filter((value): value is number => value !== null);
   return values.length === 0 ? null : Math.max(...values);
+}
+
+// Generic direct-file extractors may not know codecs until FFmpeg probes the file.
+// Explicit audio-only/video-only metadata still takes precedence over extension hints.
+function isUnprobedVideoContainer(format: { ext?: string | null; vcodec?: string | null; acodec?: string | null }): boolean {
+  return format.vcodec == null && format.acodec == null
+    && /^(mp4|m4v|mkv|webm|mov|avi|flv|ts|mpeg|mpg)$/i.test(format.ext ?? '');
 }
 
 function hasCodec(value: string | null | undefined): boolean {

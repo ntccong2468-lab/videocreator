@@ -69,7 +69,7 @@ export function createDownloadExecutor(
       if (!isSupported(url)) {
         throw new CreatorExecutorError(
           'unsupported_source',
-          'Only public YouTube, Bilibili, X, TikTok, Instagram, Douyin, Facebook, Xiaohongshu, Pinterest, and Reddit video URLs are supported'
+          'Use a public HTTP or HTTPS video URL supported by the video extractor'
         );
       }
       const proxy = (await input.configStore.read()).proxy.trim();
@@ -1338,7 +1338,9 @@ function classifyDownloadError(stderr: string, exitCode: number | null): Creator
     return failure('login_required', 'yt-dlp reports that platform login or fresh cookies are required.', 'unauthorized');
   }
   if (
-    text.includes('copyright')
+    text.includes('版权地区受限')
+    || text.includes('region restricted')
+    || text.includes('copyright')
     || text.includes('not available in your country')
     || text.includes('geo-restricted')
   ) {

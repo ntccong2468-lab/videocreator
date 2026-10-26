@@ -3339,5 +3339,8 @@
   "Adjust timing": "Điều chỉnh thời gian",
   "Enter the required credentials for the selected dubbing service to continue.": "Nhập thông tin xác thực cần thiết cho dịch vụ lồng tiếng đã chọn để tiếp tục.",
   "Save and continue composing": "Lưu và tiếp tục ghép video",
-  "videoCreator by Nguyễn Thành Công. Download, translate, subtitle, and dub videos.": "videoCreator của Nguyễn Thành Công — tải video, dịch, tạo phụ đề và lồng tiếng."
+  "videoCreator by Nguyễn Thành Công. Download, translate, subtitle, and dub videos.": "videoCreator của Nguyễn Thành Công — tải video, dịch, tạo phụ đề và lồng tiếng.",
+  "Also accepts Bilibili.tv, direct public video links, and other sites supported by yt-dlp. Availability depends on the source and access permissions.": "Nhận cả Bilibili.tv, link video trực tiếp và các website khác do yt-dlp hỗ trợ. Khả năng tải phụ thuộc nguồn và quyền truy cập.",
+  "Enter a public HTTP or HTTPS video URL supported by yt-dlp": "Nhập link video HTTP hoặc HTTPS công khai mà yt-dlp hỗ trợ.",
+  "Enter a public HTTP or HTTPS video URL supported by yt-dlp, or upload a local video.": "Nhập link video HTTP hoặc HTTPS công khai mà yt-dlp hỗ trợ, hoặc tải video từ máy lên."
 }

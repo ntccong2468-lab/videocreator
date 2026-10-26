@@ -209,23 +209,12 @@ function validateSource(job: CreatorJob): void {
   }
   const value = job.state.sourceUrl;
   if (typeof value !== 'string' || !isSupportedVideoUrl(value)) {
-    throw new VideoTranslationWorkflowError('unsupported_source', 'Only public YouTube, Bilibili, X, TikTok, Instagram, Douyin, Facebook, Xiaohongshu, Pinterest, and Reddit video URLs are supported');
+    throw new VideoTranslationWorkflowError('unsupported_source', 'Use a public HTTP or HTTPS video URL supported by the video extractor');
   }
 }
 
 function isSupportedVideoUrl(value: string): boolean {
-  try {
-    const source = new URL(value.trim());
-    // Existing translation jobs may use HTTP YouTube or Bilibili links.
-    if (source.protocol === 'http:') {
-      source.protocol = 'https:';
-      const platform = supportedVideoSourcePlatform(source.toString());
-      return platform === 'youtube' || platform === 'bilibili';
-    }
-    return supportedVideoSourcePlatform(value) !== null;
-  } catch {
-    return supportedVideoSourcePlatform(value) !== null;
-  }
+  return supportedVideoSourcePlatform(value) !== null;
 }
 
 function hasTtsCredentials(

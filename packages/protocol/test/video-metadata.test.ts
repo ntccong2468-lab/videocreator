@@ -37,7 +37,9 @@ describe('video source identity', () => {
     expect(videoSourceIdentity(source)).toBe('youtube:demo');
   });
 
-  it.each(['https://notyoutube.com/watch?v=demo', 'https://notbilibili.com/video/BV18E421w7bf', 'file:///tmp/video.mp4', 'not a URL'])('rejects unsupported sources: %s', source => {
+  it.each(['file:///tmp/video.mp4', 'not a URL'])('rejects unsupported sources: %s', source => {
     expect(videoSourceIdentity(source)).toBeNull();
   });
 });
+
+ it.each(['https://notyoutube.com/watch?v=demo', 'https://notbilibili.com/video/BV18E421w7bf'])('keeps other public websites generic instead of impersonating a platform: %s', source => { expect(videoSourceIdentity(source)).toBe(`generic:${source}`); });

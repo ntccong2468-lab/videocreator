@@ -152,6 +152,9 @@ describe('video translation workflow', () => {
     'https://www.youtube.com/watch?v=xVWS7yHdzCU',
     'https://youtu.be/tAkC-ZdaqWs?si=6LcL-jgzdBaZ1IFD',
     'https://x.com/creator/status/123',
+    'https://www.bilibili.tv/en/video/4801343148661760?bstar_from=bstar-web.homepage.recommend.all',
+    'https://vimeo.com/12345678',
+    'http://cdn.example.org/video.mkv?signature=sample',
     'https://www.tiktok.com/@creator/video/123',
     'https://www.instagram.com/reel/abc123/',
     '分享视频 https://v.douyin.com/abc123/ 复制打开抖音',
@@ -175,8 +178,8 @@ describe('video translation workflow', () => {
     fixture.db.close();
   });
 
-  it.each(['https://www.instagram.com/creator/', 'https://www.pinterest.com/creator/',
-    'https://notxiaohongshu.com/explore/6a9149f3000000001f01d20a'])('rejects unsupported translation sources: %s', async sourceUrl => {
+  it.each(['https://localhost/video', 'http://127.0.0.1/video',
+    'file:///tmp/video.mp4'])('rejects unsupported translation sources: %s', async sourceUrl => {
     const fixture = setup({ sourceUrl });
     const workflow = createVideoTranslationWorkflow({ creator: fixture.service, dispatcher: fixture.dispatcher,
       configStore: { read: async () => createDefaultCreatorServicesConfig() } });

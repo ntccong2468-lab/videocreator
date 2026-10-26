@@ -1,4 +1,4 @@
-export type DownloadPlatform = 'youtube' | 'bilibili' | 'x' | 'tiktok' | 'instagram' | 'douyin' | 'facebook' | 'xiaohongshu' | 'pinterest' | 'reddit';
+export type DownloadPlatform = 'youtube' | 'bilibili' | 'x' | 'tiktok' | 'instagram' | 'douyin' | 'facebook' | 'xiaohongshu' | 'pinterest' | 'reddit' | 'generic';
 
 export function extractDouyinShareUrl(value: string): string {
   const trimmed = value.trim();
@@ -23,10 +23,11 @@ export function normalizeVideoSourceUrl(value: string): string {
 export function supportedVideoSourcePlatform(value: string): DownloadPlatform | null {
   try {
     const url = new URL(normalizeVideoSourceUrl(value));
-    if (url.protocol !== 'https:') return null;
+    if (!isPublicVideoSourceUrl(url)) return null;
     const host = url.hostname.toLowerCase();
     if (host === 'youtu.be' || host === 'youtube.com' || host.endsWith('.youtube.com')) return 'youtube';
-    if (host === 'b23.tv' || host === 'bilibili.com' || host.endsWith('.bilibili.com')) return 'bilibili';
+    if (host === 'b23.tv' || ((host === 'bilibili.com' || host.endsWith('.bilibili.com'))
+      && /^\/video\/(?:BV[A-Za-z0-9]+|av\d+)\/?$/.test(url.pathname))) return 'bilibili';
     if (host === 'x.com' || host.endsWith('.x.com') || host === 'twitter.com' || host.endsWith('.twitter.com')) return 'x';
     if (isTikTokVideoUrl(url)) return 'tiktok';
     if (isInstagramVideoUrl(url)) return 'instagram';
@@ -35,10 +36,27 @@ export function supportedVideoSourcePlatform(value: string): DownloadPlatform | 
     if (isXiaohongshuVideoUrl(url)) return 'xiaohongshu';
     if (isPinterestVideoUrl(url)) return 'pinterest';
     if (isRedditVideoUrl(url)) return 'reddit';
+    return 'generic';
   } catch {
     return null;
   }
   return null;
+}
+
+// Only public HTTP(S) sources are passed to the extractor. Recognition is not a promise
+// that an upstream site supplies an accessible, non-DRM video.
+function isPublicVideoSourceUrl(url: URL): boolean {
+  if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password) return false;
+  const host = url.hostname.toLowerCase().replace(/^\[|\]$/g, '');
+  if (!host || host === 'localhost' || /\.(?:localhost|local|internal)$/.test(host)) return false;
+  if (host.includes(':')) return /^[23][a-f0-9:]+$/i.test(host);
+  if (/^\d+\.\d+\.\d+\.\d+$/.test(host)) {
+    const [a, b] = host.split('.').map(Number);
+    return a! > 0 && a! < 224 && a !== 10 && a !== 127 && !(a === 169 && b === 254)
+      && !(a === 172 && b! >= 16 && b! <= 31) && !(a === 192 && b === 168)
+      && !(a === 100 && b! >= 64 && b! <= 127);
+  }
+  return host.includes('.');
 }
 
 function isTikTokVideoUrl(url: URL): boolean {

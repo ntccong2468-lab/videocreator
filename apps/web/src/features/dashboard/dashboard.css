@@ -16031,3 +16031,5 @@
 .subtitle-composition-preview[data-status="failed"] .subtitle-composition-canvas { visibility: hidden; }
 .subtitle-composition-preview button { pointer-events: auto; }
 .subtitle-editor-styled-overlay { position: absolute; inset: 0; pointer-events: none; }
+
+.video-source-coverage { display: block; flex-basis: 100%; min-width: 0; max-width: 100%; overflow-wrap: anywhere; color: var(--muted); font-size: 12px; line-height: 1.5; }

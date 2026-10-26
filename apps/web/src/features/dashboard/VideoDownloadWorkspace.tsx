@@ -209,7 +209,8 @@ export default function VideoDownloadWorkspace(props: {
               : probe.platform === 'facebook' ? 'Facebook'
                 : probe.platform === 'xiaohongshu' ? l('小红书', 'Xiaohongshu')
                   : probe.platform === 'pinterest' ? 'Pinterest'
-                    : probe.platform === 'reddit' ? 'Reddit' : 'YouTube';
+                    : probe.platform === 'reddit' ? 'Reddit'
+                      : probe.platform === 'generic' ? platformFor(url, l) : 'YouTube';
   const context = probe === undefined
     ? validUrl
       ? `${platform} · ${probing ? l('正在解析', 'Analyzing') : l('待解析', 'Waiting to analyze')}`
@@ -1276,7 +1277,7 @@ function readDownloadProbe(
     || typeof metadata.title !== 'string'
     || typeof metadata.requestedUrl !== 'string'
     || typeof metadata.url !== 'string'
-    || (metadata.platform !== 'youtube' && metadata.platform !== 'bilibili' && metadata.platform !== 'x' && metadata.platform !== 'tiktok' && metadata.platform !== 'instagram' && metadata.platform !== 'douyin' && metadata.platform !== 'facebook' && metadata.platform !== 'xiaohongshu' && metadata.platform !== 'pinterest' && metadata.platform !== 'reddit')
+    || (metadata.platform !== 'youtube' && metadata.platform !== 'bilibili' && metadata.platform !== 'x' && metadata.platform !== 'tiktok' && metadata.platform !== 'instagram' && metadata.platform !== 'douyin' && metadata.platform !== 'facebook' && metadata.platform !== 'xiaohongshu' && metadata.platform !== 'pinterest' && metadata.platform !== 'reddit' && metadata.platform !== 'generic')
     || !Array.isArray(metadata.formats)
     || !Array.isArray(metadata.options)
   ) {
@@ -1730,8 +1731,11 @@ function platformFor(
   value: string,
   l: ReturnType<typeof useLocalizedCopy>
 ): string {
+  if (supportedVideoSourcePlatform(value) === 'generic') {
+    try { return new URL(value.trim()).hostname.replace(/^www\./, ''); } catch { return l('公开视频', 'Public video'); }
+  }
   if (/youtu(?:\.be|be\.com)/i.test(value)) return 'YouTube';
-  if (/bilibili\.com|b23\.tv/i.test(value)) return 'Bilibili';
+  if (/bilibili\.(?:com|tv)|b23\.tv/i.test(value)) return 'Bilibili';
   if (/^https:\/\/(?:[^/]+\.)?(?:x|twitter)\.com\//i.test(value)) return 'X';
   if (/^https:\/\/(?:[^/]+\.)?tiktok\.com\//i.test(value)) return 'TikTok';
   if (/^https:\/\/(?:www\.)?instagram\.com\//i.test(value)) return 'Instagram';
@@ -1759,7 +1763,7 @@ function formatDownloadError(
   if (/unsupported_source/i.test(message)) {
     return l(
       '当前仅支持 YouTube、Bilibili、X、TikTok、Instagram、抖音、Facebook、小红书、Pinterest 和 Reddit 公开视频',
-      'Only public YouTube, Bilibili, X, TikTok, Instagram, Douyin, Facebook, Xiaohongshu, Pinterest, and Reddit videos are supported'
+      'Enter a public HTTP or HTTPS video URL supported by yt-dlp'
     );
   }
   if (/download_probe_stale/i.test(message)) {

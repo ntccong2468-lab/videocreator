@@ -58,18 +58,20 @@ describe('shared public video sources', () => {
     'https://www.douyin.com/jingxuan/search/qianjidong?type=general',
     'https://www.douyin.com/jingxuan/search/qianjidong?modal_id=abc',
     'https://www.douyin.com/jingxuan/search/qianjidong/extra?modal_id=123',
-    'https://notdouyin.com/jingxuan/search/qianjidong?modal_id=123',
+
     'https://www.douyin.com/jingxuanother?modal_id=123',
     'https://www.xiaohongshu.com/user/profile/123', 'https://www.pinterest.com/creator/',
-    'https://notpinterest.com/pin/123/', 'https://instagram.com.example.com/reel/abc/',
+
     'https://www.reddit.com/r/claude/', 'https://www.reddit.com/user/creator/',
     'https://www.reddit.com/r/claude/s/', 'https://www.reddit.com/comments/',
-    'https://reddit.com.example.com/r/claude/s/R5I7tDfJ0h', 'https://notreddit.com/comments/123',
-    'https://redd.it/', 'https://v.redd.it.example.com/demo123/',
-    'http://www.instagram.com/reel/abc/', 'file:///tmp/video.mp4', 'not a URL'
-  ])('rejects unsupported links: %s', url => {
-    expect(supportedVideoSourcePlatform(url)).toBeNull();
-    expect(videoSourceIdentity(url)).toBeNull();
+
+    'https://redd.it/',
+    'file:///tmp/video.mp4', 'not a URL'
+  ])('delegates other public URL forms and rejects non-HTTP input: %s', url => {
+    const invalid = url === 'not a URL' || url.startsWith('file:');
+    expect(supportedVideoSourcePlatform(url)).toBe(invalid ? null : 'generic');
+    if (invalid) expect(videoSourceIdentity(url)).toBeNull();
+    else expect(videoSourceIdentity(url)).not.toBeNull();
   });
 
   it('preserves signed note parameters and never reuses a different note', () => {

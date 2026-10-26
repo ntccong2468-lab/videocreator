@@ -52,6 +52,8 @@ export default function SupportedVideoSources(props: { compact?: boolean; label?
           </li>
         ))}
       </ul>
+      <small className="video-source-coverage">{l('也支持 Bilibili.tv、公开视频直链及 yt-dlp 支持的其他网站。能否下载取决于来源和访问权限。',
+        'Also accepts Bilibili.tv, direct public video links, and other sites supported by yt-dlp. Availability depends on the source and access permissions.')}</small>
     </div>
   );
 }

@@ -9,9 +9,9 @@ import (
 	"krillin-ai/internal/types"
 	"krillin-ai/log"
 	"krillin-ai/pkg/util"
+	"net"
 	"net/url"
 	"os"
-	"regexp"
 	"slices"
 	"strings"
 	"time"
@@ -27,6 +27,7 @@ func (s Service) linkToFile(ctx context.Context, stepParam *types.SubtitleTaskSt
 	link := stepParam.Link
 	source, _ := url.Parse(strings.TrimSpace(link))
 	sourceHost := ""
+	bilibiliLink, bilibiliErr := util.NormalizeBilibiliVideoURL(link)
 	if source != nil {
 		sourceHost = strings.ToLower(source.Hostname())
 	}
@@ -79,12 +80,8 @@ func (s Service) linkToFile(ctx context.Context, stepParam *types.SubtitleTaskSt
 				return fmt.Errorf("linkToFile download audio yt-dlp error: %w: %s", err, compactCommandOutput(output))
 			}
 		}
-	} else if sourceHost == "bilibili.com" || strings.HasSuffix(sourceHost, ".bilibili.com") {
-		normalizedLink, normalizeErr := util.NormalizeBilibiliVideoURL(link)
-		if normalizeErr != nil {
-			return fmt.Errorf("linkToFile error: %w", normalizeErr)
-		}
-		stepParam.Link = normalizedLink
+	} else if bilibiliErr == nil {
+		stepParam.Link = bilibiliLink
 		if !stepParam.SkipAudio {
 			cmdArgs := []string{"--no-playlist", "-f", "bestaudio[ext=m4a]", "-x", "--audio-format", "mp3", "-o", audioPath, stepParam.Link}
 			if config.Conf.App.Proxy != "" {
@@ -141,7 +138,7 @@ func (s Service) linkToFile(ctx context.Context, stepParam *types.SubtitleTaskSt
 		}
 		if util.IsYouTubeURL(stepParam.Link) {
 			output, err = downloadYouTubeMedia(ctx, cmdArgs, downloadProgressReporter(stepParam.TaskPtr, false, 45, 95))
-		} else if sourceHost == "bilibili.com" || strings.HasSuffix(sourceHost, ".bilibili.com") {
+		} else if bilibiliErr == nil {
 			output, err = downloadBilibiliMedia(ctx, cmdArgs, downloadProgressReporter(stepParam.TaskPtr, false, 45, 95))
 		} else {
 			output, err = runMediaDownload(ctx, cmdArgs, downloadProgressReporter(stepParam.TaskPtr, false, 45, 95))
@@ -160,37 +157,23 @@ func (s Service) linkToFile(ctx context.Context, stepParam *types.SubtitleTaskSt
 
 func isAdditionalVideoSource(value string) bool {
 	source, err := url.Parse(strings.TrimSpace(value))
-	if err != nil || source.Scheme != "https" {
+	if err != nil || (source.Scheme != "https" && source.Scheme != "http") || source.User != nil {
 		return false
 	}
 	host := strings.ToLower(source.Hostname())
-	path := source.Path
-	match := func(pattern string) bool { return regexp.MustCompile(pattern).MatchString(path) }
-	switch {
-	case host == "x.com" || strings.HasSuffix(host, ".x.com") || host == "twitter.com" || strings.HasSuffix(host, ".twitter.com"):
-		return true
-	case host == "vm.tiktok.com" || host == "vt.tiktok.com" || host == "v.douyin.com" || host == "fb.watch":
-		return match(`^/[\w-]+/?$`)
-	case host == "tiktok.com" || strings.HasSuffix(host, ".tiktok.com"):
-		return match(`^/@[^/]+/video/\d+/?$`)
-	case host == "instagram.com" || host == "www.instagram.com":
-		return match(`^/(?:reel|p|tv)/[\w-]+/?$`)
-	case host == "douyin.com" || host == "www.douyin.com":
-		return match(`^/video/\d+/?$`)
-	case host == "facebook.com" || host == "www.facebook.com" || host == "m.facebook.com":
-		if match(`^/watch/?$`) {
-			return regexp.MustCompile(`^\d+$`).MatchString(source.Query().Get("v"))
-		}
-		return match(`^/(?:reel/\d+|videos/\d+|[^/]+/videos/\d+)/?$`)
-	case host == "xiaohongshu.com" || host == "www.xiaohongshu.com":
-		return match(`(?i)^/explore/[0-9a-f]{24}/?$`)
-	case host == "pinterest.com" || host == "www.pinterest.com":
-		return match(`^/pin/\d+/?$`)
-	case host == "b23.tv":
-		return match(`^/[\w-]+/?$`)
-	default:
+	if host == "" || host == "localhost" || strings.HasSuffix(host, ".localhost") || strings.HasSuffix(host, ".local") || strings.HasSuffix(host, ".internal") {
 		return false
 	}
+	if ip := net.ParseIP(host); ip != nil {
+		if v4 := ip.To4(); v4 != nil && v4[0] == 100 && v4[1] >= 64 && v4[1] <= 127 {
+			return false
+		}
+		return ip.IsGlobalUnicast() && !ip.IsPrivate() && !ip.IsLoopback() && !ip.IsLinkLocalUnicast()
+	}
+	if !strings.Contains(host, ".") {
+		return false
+	}
+	return true
 }
 
 func resolveLocalMediaInput(input string) (string, bool) {
@@ -206,6 +189,9 @@ func resolveLocalMediaInput(input string) (string, bool) {
 }
 
 func compactCommandOutput(output []byte) string {
+	if strings.Contains(string(output), "版权地区受限") {
+		return "region_or_copyright_restricted: video is unavailable in this region"
+	}
 	const maximum = 1200
 	value := strings.TrimSpace(string(output))
 	var fatalLines []string
