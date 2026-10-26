@@ -573,8 +573,9 @@ describe('app CSS visual contracts', () => {
 
     expect(brandButton).toContain('padding: 0;');
     expect(logoLockup).toContain('height: 38px;');
-    expect(logoLockup).toContain('justify-content: center;');
-    expect(logoLockup).toContain('flex-direction: column;');
+    expect(logoLockup).toContain('align-items: center;');
+    expect(logoLockup).toContain('justify-content: flex-start;');
+    expect(logoLockup).toContain('flex-direction: row;');
     expect(logoLockup).not.toContain('padding-top:');
     expect(productName).toContain('font-size: 17px;');
     expect(appCss).not.toContain('.sidebar-brand-version');

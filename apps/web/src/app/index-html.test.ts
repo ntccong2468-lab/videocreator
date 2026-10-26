@@ -5,7 +5,7 @@ const indexHtml = readFileSync('index.html', 'utf8');
 
 describe('index html assets', () => {
   it('uses the OpenCreator title without legacy brand icons', () => {
-    expect(indexHtml).toContain('<title>videoCreator</title>');
+    expect(indexHtml).toContain('<title>videoCreator — Nguyễn Thành Công</title>');
     expect(indexHtml).not.toContain('/logo-v2-white-logo.svg');
     expect(indexHtml).not.toContain('/logo-v2-white-logo.png');
     expect(indexHtml).not.toContain('/favicon.svg');

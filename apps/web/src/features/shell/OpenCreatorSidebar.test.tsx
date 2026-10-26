@@ -232,12 +232,12 @@ describe('OpenCreatorSidebar', () => {
     expect(screen.getByRole('button', { name: '生成 B 站封面 1天' })).toBeInTheDocument();
   });
 
-  it('shows only the OpenCreator wordmark without an image logo in light mode', () => {
+  it('shows the VN mark and videoCreator wordmark in light mode', () => {
     const { container } = renderSidebar({ colorMode: 'light' });
 
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
     expect(screen.getByText('videoCreator')).toHaveClass('sidebar-logo-word');
-    expect(container.querySelector('.sidebar-logo-image')).not.toBeInTheDocument();
+    expect(container.querySelector('.sidebar-logo-image')).toBeInTheDocument();
     expect(screen.queryByText('v1.0')).not.toBeInTheDocument();
   });
 

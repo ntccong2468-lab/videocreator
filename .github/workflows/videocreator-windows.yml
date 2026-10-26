@@ -26,16 +26,19 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @opencreator/protocol build
       - run: pnpm --filter @opencreator/config test
-      - run: pnpm --filter @opencreator/desktop test -- test/deep-link-manager.test.ts test/protocol-path.test.ts test/updater.test.ts
+      - run: pnpm --filter @opencreator/desktop test -- test/deep-link-manager.test.ts test/protocol-path.test.ts test/updater.test.ts test/branding-assets-2026-07-27.test.ts
       - run: pnpm --filter @opencreator/desktop test -- test/release-assets.test.mjs -t "videoCreator"
       - run: pnpm desktop:dist
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Verify packaged application startup
         run: pnpm --filter @opencreator/desktop e2e:package:smoke
       - name: Upload installer and build manifest
         uses: actions/upload-artifact@v4
         with:
-          name: videoCreator-3.2.9-windows-x64
+          name: videoCreator-3.2.9-vn.1-windows-x64
           if-no-files-found: error
           path: |
             apps/desktop/release/videoCreator-*.exe
             apps/desktop/release/opencreator-desktop-build-manifest.json
+            apps/desktop/.pack/components/Remotion-*.tar.gz

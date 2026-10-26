@@ -176,7 +176,7 @@ describe('OpenCreatorSettingsView', () => {
     expect(screen.getByRole('button', { name: 'Profiles' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '清理' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '诊断' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '关于 OpenCreator' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '关于 videoCreator' })).toBeInTheDocument();
 
     expect(screen.getByText('默认权限')).toBeInTheDocument();
     expect(screen.getByRole('combobox', { name: '默认权限' })).toHaveValue('follow-project');
@@ -583,9 +583,10 @@ describe('OpenCreatorSettingsView', () => {
   it('shows Codex CLI details only in the about advanced information section', () => {
     render(<OpenCreatorSettingsView runtimeStatus={runtimeStatus} onBack={vi.fn()} />);
 
-    fireEvent.click(screen.getByRole('button', { name: '关于 OpenCreator' }));
+    fireEvent.click(screen.getByRole('button', { name: '关于 videoCreator' }));
 
-    expect(screen.getByText('OpenCreator 版本')).toBeInTheDocument();
+    expect(screen.getByText('videoCreator 版本')).toBeInTheDocument();
+    expect(screen.getByText('Nguyễn Thành Công')).toBeInTheDocument();
     expect(screen.getByText(runtimeStatus.appVersion)).toBeInTheDocument();
     expect(screen.getByText('Runtime 版本')).toBeInTheDocument();
     expect(screen.getByText('数据目录')).toBeInTheDocument();
@@ -646,7 +647,7 @@ describe('OpenCreatorSettingsView', () => {
   it('shows disconnected local runtime status in about advanced information', () => {
     render(<OpenCreatorSettingsView runtimeStatus={{ ...runtimeStatus, connected: false }} onBack={vi.fn()} />);
 
-    fireEvent.click(screen.getByRole('button', { name: '关于 OpenCreator' }));
+    fireEvent.click(screen.getByRole('button', { name: '关于 videoCreator' }));
 
     const advanced = screen.getByRole('region', { name: '高级信息' });
     expect(within(advanced).getByText('本地运行内核状态')).toBeInTheDocument();

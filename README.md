@@ -1,5 +1,9 @@
 # videoCreator
 
+![VN](apps/web/public/vn-logo.svg)
+
+**Tác giả bản videoCreator: Nguyễn Thành Công.**
+
 Ứng dụng desktop cho Windows để tải video, dịch nội dung, tạo phụ đề và lồng tiếng trong một không gian làm việc.
 
 ## Tính năng
@@ -18,7 +22,7 @@ Khuyến nghị Windows 10/11, RAM 16 GB trở lên. Có thể dùng nhận dạ
 
 ### Tải bản build
 
-Mở [GitHub Actions](https://github.com/ntccong2468-lab/videocreator/actions/workflows/videocreator-windows.yml), chọn lần build thành công và tải artifact **videoCreator-3.2.9-windows-x64**. Bộ cài chỉ xuất hiện sau khi quy trình build và kiểm tra thành công.
+Mở [GitHub Actions](https://github.com/ntccong2468-lab/videocreator/actions/workflows/videocreator-windows.yml), chọn lần build thành công và tải artifact **videoCreator-3.2.9-vn.1-windows-x64**. Bộ cài chỉ xuất hiện sau khi quy trình build và kiểm tra thành công.
 
 ### Tự build
 
@@ -28,7 +32,7 @@ Cài Git, Node.js 22 LTS, Go 1.25 và pnpm 9.15.0. Mở PowerShell tại thư m�
 powershell -ExecutionPolicy Bypass -File .\Build-Windows.ps1
 ```
 
-Script cài dependency, build và kiểm tra ứng dụng. Kết quả dự kiến: `apps/desktop/release/videoCreator-3.2.9-win-x64.exe`.
+Script cài dependency, build và kiểm tra ứng dụng. Kết quả dự kiến: `apps/desktop/release/videoCreator-3.2.9-vn.1-win-x64.exe`.
 
 ## Bắt đầu sử dụng
 

@@ -820,6 +820,7 @@ function PluginSettings(props: { runtimeStatus: RuntimeStatus }) {
 
 function AboutSettings(props: { runtimeStatus: RuntimeStatus }) {
   const { t } = useAppLanguage();
+  const l = useLocalizedCopy();
   const runtimeStatusText = props.runtimeStatus.connected
     ? t('settings.status.normal')
     : t('settings.status.disconnected');
@@ -831,6 +832,7 @@ function AboutSettings(props: { runtimeStatus: RuntimeStatus }) {
         <p>{t('settings.about.description')}</p>
       </header>
       <div className="settings-card">
+        <SettingsRow label={l('作者', 'Author')} value="Nguyễn Thành Công" />
         <SettingsRow
           label={t('settings.about.version')}
           value={props.runtimeStatus.appVersion ?? t('settings.unknown')}

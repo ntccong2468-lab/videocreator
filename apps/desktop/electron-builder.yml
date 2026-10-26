@@ -1,5 +1,6 @@
 appId: local.videocreator.desktop
 productName: videoCreator
+copyright: Copyright © 2026 Nguyễn Thành Công; third-party notices included
 artifactName: videoCreator-${version}-${os}-${arch}.${ext}
 asar: true
 npmRebuild: false

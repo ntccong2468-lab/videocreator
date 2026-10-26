@@ -264,3 +264,8 @@ pre {
     margin-bottom: 34px;
   }
 }
+
+/* VN edition */
+.vn-logo { display: block; margin-bottom: 16px; border-radius: 12px; }
+.brand-name { margin-bottom: 6px; }
+.brand-author { margin: 0 0 32px; font-size: 14px; color: #777; }

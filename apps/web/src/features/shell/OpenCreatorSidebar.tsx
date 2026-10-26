@@ -275,6 +275,7 @@ export function OpenCreatorSidebar(props: {
         ) : (
           <>
             <div className="sidebar-logo-lockup">
+              <OpenCreatorMark className="sidebar-logo-image" size={28} aria-hidden="true" />
               <span className="sidebar-logo-word">videoCreator</span>
             </div>
             <div className="sidebar-brand-actions">

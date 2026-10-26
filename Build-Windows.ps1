@@ -28,4 +28,4 @@ Invoke-Checked -CommandArgs @('--filter', '@opencreator/protocol', 'build')
 Invoke-Checked -CommandArgs @('--filter', '@opencreator/config', 'test')
 Invoke-Checked -CommandArgs @('desktop:dist')
 Invoke-Checked -CommandArgs @('--filter', '@opencreator/desktop', 'e2e:package:smoke')
-Write-Host 'Build and smoke checks passed. Installer: apps/desktop/release/videoCreator-3.2.9-win-x64.exe'
+Write-Host 'Build and smoke checks passed. Installer: apps/desktop/release/videoCreator-3.2.9-vn.1-win-x64.exe'
