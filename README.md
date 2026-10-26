@@ -30,9 +30,9 @@ Khuyến nghị Windows 10/11, RAM 16 GB trở lên. Có thể dùng nhận dạ
 
 ### Tải bộ cài
 
-[Tải videoCreator VN 3.2.9-vn.1 cho Windows x64](https://github.com/ntccong2468-lab/videocreator/releases/download/v3.2.9-vn.1/videoCreator-3.2.9-vn.1-win-x64.exe)
+[Tải videoCreator VN 3.2.9-vn.2 cho Windows x64](https://github.com/ntccong2468-lab/videocreator/releases/download/v3.2.9-vn.2/videoCreator-3.2.9-vn.2-win-x64.exe)
 
-[Trang phát hành và checksum SHA-256](https://github.com/ntccong2468-lab/videocreator/releases/tag/v3.2.9-vn.1).
+[Trang phát hành và checksum SHA-256](https://github.com/ntccong2468-lab/videocreator/releases/tag/v3.2.9-vn.2).
 Bộ cài đã qua build và kiểm tra khởi động trên Windows bằng GitHub Actions. Bộ cài chưa ký số.
 
 ### Tự build
@@ -43,13 +43,13 @@ Cài Git, Node.js 22 LTS, Go 1.25 và pnpm 9.15.0. Mở PowerShell tại thư m�
 powershell -ExecutionPolicy Bypass -File .\Build-Windows.ps1
 ```
 
-Script cài dependency, build và kiểm tra ứng dụng. Kết quả dự kiến: `apps/desktop/release/videoCreator-3.2.9-vn.1-win-x64.exe`.
+Script cài dependency, build và kiểm tra ứng dụng. Kết quả dự kiến: `apps/desktop/release/videoCreator-3.2.9-vn.2-win-x64.exe`.
 
 ## Ngôn ngữ giao diện
 
 Trong ứng dụng, vào **Cài đặt → Chung → Ngôn ngữ hiển thị → Tiếng Việt**.
 Nếu đang dùng tiếng Trung: **设置 → 常规 → 显示语言 → Tiếng Việt**.
-Mã nguồn trên nhánh main mặc định dùng tiếng Việt cho cấu hình mới và màn hình khởi động; lựa chọn ngôn ngữ đã lưu vẫn được giữ. Bộ cài VN 3.2.9-vn.1 đã phát hành cần chọn ngôn ngữ trong Cài đặt nếu đang hiển thị ngôn ngữ khác.
+Bản VN 3.2.9-vn.2 mặc định dùng tiếng Việt cho cấu hình mới và màn hình khởi động. Lựa chọn ngôn ngữ đã lưu vẫn được giữ; nếu nâng cấp từ bản cũ đang dùng ngôn ngữ khác, hãy đổi trong Cài đặt theo hướng dẫn trên.
 
 ## Bắt đầu sử dụng
 

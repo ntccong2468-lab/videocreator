@@ -13,14 +13,25 @@
     "git_diff_check": "passed",
     "fork_packaging_regression_tests": 2,
     "windows_x64_runtime_cross_compile": "passed; CLI and server only, not GUI installer",
-    "windows_installer_build": "passed in GitHub Actions run 40341709682",
-    "packaged_windows_smoke": "passed in GitHub Actions run 40341709682",
+    "windows_installer_build": "passed in GitHub Actions run 40381965359",
+    "packaged_windows_smoke": "passed in GitHub Actions run 40381965359",
     "vn_branding": {
       "web_tests": 126,
       "css_tests": 68,
       "language_tests": 28,
       "icon_tests": 4,
       "release_integrity_test": 1
+    },
+    "expanded_video_urls": {
+      "protocol_tests": 158,
+      "daemon_targeted_tests": 117,
+      "web_targeted_tests": 33,
+      "go_service_targeted_tests": "passed",
+      "web_typecheck": "passed",
+      "daemon_typecheck": "passed",
+      "web_production_build": "passed",
+      "public_direct_mp4_probe": "passed; generic extractor with video/audio output options",
+      "bilibili_tv_sample_probe": "recognized as BiliIntl; source reports copyright region restriction"
     }
   },
   "unverified": [
@@ -33,8 +44,9 @@
     "Five pre-existing release-promotion CLI tests failed in this sandbox with empty child-process output; fork installer staging regression tests passed."
   ],
   "release": {
-    "tag": "v3.2.9-vn.1",
-    "build_commit": "4ee89325825bc691713d37e4607dc9d0b229725d",
-    "release_run": 40344057854
+    "tag": "v3.2.9-vn.2",
+    "build_commit": "04378690f425236b3b5cdab57c0dc339da092ad6",
+    "build_run": 40381965359,
+    "release_run": 40384619483
   }
 }
