@@ -12,17 +12,29 @@
     "packaging_script_syntax": "passed",
     "git_diff_check": "passed",
     "fork_packaging_regression_tests": 2,
-    "windows_x64_runtime_cross_compile": "passed; CLI and server only, not GUI installer"
+    "windows_x64_runtime_cross_compile": "passed; CLI and server only, not GUI installer",
+    "windows_installer_build": "passed in GitHub Actions run 40341709682",
+    "packaged_windows_smoke": "passed in GitHub Actions run 40341709682",
+    "vn_branding": {
+      "web_tests": 126,
+      "css_tests": 68,
+      "language_tests": 28,
+      "icon_tests": 4,
+      "release_integrity_test": 1
+    }
   },
   "unverified": [
-    "Windows installer packaging and packaged app smoke tests",
     "Actual downloads, translation and dubbing with configured services",
-    "Cloud service authorization callbacks with videocreator protocol",
-    "Windows GUI installer requires native Windows build and smoke tests"
+    "Cloud service authorization callbacks with videocreator protocol"
   ],
   "facebook_publishing": false,
   "note": "Source customization only. Some upstream branding, icons and service labels remain.",
   "known_limitations": [
     "Five pre-existing release-promotion CLI tests failed in this sandbox with empty child-process output; fork installer staging regression tests passed."
-  ]
+  ],
+  "release": {
+    "tag": "v3.2.9-vn.1",
+    "build_commit": "4ee89325825bc691713d37e4607dc9d0b229725d",
+    "release_run": 40344057854
+  }
 }

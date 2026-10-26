@@ -20,9 +20,12 @@ Mã nguồn miễn phí. Dịch vụ AI, API và model bên thứ ba có thể c
 
 Khuyến nghị Windows 10/11, RAM 16 GB trở lên. Có thể dùng nhận dạng CPU hoặc dịch vụ nhận dạng online; không bắt buộc card NVIDIA cho cấu hình này. Không phải mọi model AI đều hỗ trợ CPU.
 
-### Tải bản build
+### Tải bộ cài
 
-Mở [GitHub Actions](https://github.com/ntccong2468-lab/videocreator/actions/workflows/videocreator-windows.yml), chọn lần build thành công và tải artifact **videoCreator-3.2.9-vn.1-windows-x64**. Bộ cài chỉ xuất hiện sau khi quy trình build và kiểm tra thành công.
+[Tải videoCreator VN 3.2.9-vn.1 cho Windows x64](https://github.com/ntccong2468-lab/videocreator/releases/download/v3.2.9-vn.1/videoCreator-3.2.9-vn.1-win-x64.exe)
+
+[Trang phát hành và checksum SHA-256](https://github.com/ntccong2468-lab/videocreator/releases/tag/v3.2.9-vn.1).
+Bộ cài đã qua build và kiểm tra khởi động trên Windows bằng GitHub Actions. Bộ cài chưa ký số.
 
 ### Tự build
 
