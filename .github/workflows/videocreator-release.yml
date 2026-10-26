@@ -1,0 +1,66 @@
+name: Publish verified videoCreator installer
+on:
+  workflow_dispatch:
+    inputs:
+      build_run_id:
+        description: Successful Windows build run ID
+        required: true
+        type: string
+permissions:
+  contents: write
+  actions: read
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require a successful Windows build
+        id: build
+        uses: actions/github-script@v7
+        env:
+          BUILD_RUN_ID: ${{ inputs.build_run_id }}
+        with:
+          script: |
+            if (!/^\d+$/.test(process.env.BUILD_RUN_ID)) throw new Error('Invalid run ID');
+            const {data: run} = await github.rest.actions.getWorkflowRun({...context.repo, run_id: Number(process.env.BUILD_RUN_ID)});
+            if (run.status !== 'completed' || run.conclusion !== 'success' || run.head_branch !== 'main' || run.path !== '.github/workflows/videocreator-windows.yml') throw new Error('A successful main Windows build is required');
+            core.setOutput('sha', run.head_sha);
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: videoCreator-3.2.9-vn.1-windows-x64
+          run-id: ${{ inputs.build_run_id }}
+          github-token: ${{ github.token }}
+          path: release-input
+      - name: Verify installer checksums and source commit
+        env:
+          EXPECTED_BUILD_SHA: ${{ steps.build.outputs.sha }}
+        run: node scripts/verify-videocreator-release.mjs release-input "$EXPECTED_BUILD_SHA" 3.2.9-vn.1
+      - name: Publish installer and optional rendering component
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_BUILD_SHA: ${{ steps.build.outputs.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > release-notes.txt <<'EOF'
+          # videoCreator VN 3.2.9-vn.1
+
+          Customized by Nguyễn Thành Công.
+
+          - New white VN logo on a black background for the application, installer and tray.
+          - Product introduction and author information updated for Nguyễn Thành Công.
+          - Video downloading, translation, subtitles and dubbing workflows.
+
+          Download and run videoCreator-3.2.9-vn.1-win-x64.exe on Windows x64.
+          AI services and models require separate configuration and may have their own fees.
+          The Remotion archive is an optional component downloaded by the app when needed.
+          Third-party license and copyright notices are included.
+          EOF
+          mapfile -t installers < <(find release-input -name 'videoCreator-3.2.9-vn.1-win-x64.exe' -type f)
+          mapfile -t components < <(find release-input -name 'Remotion-3.2.9-vn.1-win32-x64.tar.gz' -type f)
+          test "${#installers[@]}" -eq 1
+          test "${#components[@]}" -eq 1
+          gh release create v3.2.9-vn.1 "${installers[0]}" "${components[0]}" release-input/SHA256SUMS.txt --repo "$GITHUB_REPOSITORY" --target "$EXPECTED_BUILD_SHA" --title 'videoCreator VN 3.2.9-vn.1 — Nguyễn Thành Công' --notes-file release-notes.txt --latest
