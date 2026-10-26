@@ -35,6 +35,15 @@ describe('OpenCreator config', () => {
     expect(resolveUiSettings(readOpenCreatorConfig(path)).language).toBe(language);
   });
 
+  it('defaults new UI configuration to Vietnamese and preserves explicit system preferences', () => {
+    const root = mkdtempSync(join(tmpdir(), 'videocreator-language-'));
+    tempDirs.push(root);
+    const path = join(root, 'config.toml');
+    expect(resolveUiSettings(readOpenCreatorConfig(path)).language).toBe('vi-VN');
+    updateOpenCreatorUiSettings(path, { language: 'system' });
+    expect(resolveUiSettings(readOpenCreatorConfig(path)).language).toBe('system');
+  });
+
   it('resolves the product-owned directory layout', () => {
     expect(resolveOpenCreatorPaths({ homeDir: resolve('/Users/demo'), env: {} })).toMatchObject({
       root: resolve('/Users/demo/.videocreator'),

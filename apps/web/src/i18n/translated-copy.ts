@@ -1,7 +1,9 @@
+import vietnameseCatalog from './locales/vi-VN.json' with { type: 'json' };
 import type { AppLanguage } from './language.js';
 
 type LanguageCatalog = Readonly<Record<string, string>>;
-const catalogs: Partial<Record<AppLanguage, LanguageCatalog>> = {};
+// Bundle the default language so the first screen is already Vietnamese.
+const catalogs: Partial<Record<AppLanguage, LanguageCatalog>> = { 'vi-VN': vietnameseCatalog };
 export const additionalLanguageCatalogs: Readonly<typeof catalogs> = catalogs;
 
 const catalogLoaders = {
@@ -17,7 +19,6 @@ const catalogLoaders = {
   'ru-RU': () => import('./locales/ru-RU.json'),
   'tr-TR': () => import('./locales/tr-TR.json'),
   'id-ID': () => import('./locales/id-ID.json'),
-  'vi-VN': () => import('./locales/vi-VN.json'),
   'th-TH': () => import('./locales/th-TH.json'),
   'fil-PH': () => import('./locales/fil-PH.json'),
   'hi-IN': () => import('./locales/hi-IN.json'),

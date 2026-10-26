@@ -37,6 +37,12 @@ powershell -ExecutionPolicy Bypass -File .\Build-Windows.ps1
 
 Script cài dependency, build và kiểm tra ứng dụng. Kết quả dự kiến: `apps/desktop/release/videoCreator-3.2.9-vn.1-win-x64.exe`.
 
+## Ngôn ngữ giao diện
+
+Trong ứng dụng, vào **Cài đặt → Chung → Ngôn ngữ hiển thị → Tiếng Việt**.
+Nếu đang dùng tiếng Trung: **设置 → 常规 → 显示语言 → Tiếng Việt**.
+Mã nguồn trên nhánh main mặc định dùng tiếng Việt cho cấu hình mới và màn hình khởi động; lựa chọn ngôn ngữ đã lưu vẫn được giữ. Bộ cài VN 3.2.9-vn.1 đã phát hành cần chọn ngôn ngữ trong Cài đặt nếu đang hiển thị ngôn ngữ khác.
+
 ## Bắt đầu sử dụng
 
 1. Cấu hình dịch vụ nhận dạng, dịch và giọng đọc.

@@ -18,12 +18,12 @@ describe('Desktop deep links', () => {
     expect(deepLinkToRoute('videocreator://unknown')).toBeUndefined();
   });
 
-  it('forces Chinese application localization before Electron becomes ready', () => {
+  it('uses Vietnamese application localization before Electron becomes ready', () => {
     const mainSource = readFileSync('src/main/main.ts', 'utf8');
     const builderConfig = readFileSync('electron-builder.yml', 'utf8');
 
     expect(mainSource).toMatch(
-      /app\.setName\('videoCreator'\);\s*app\.commandLine\.appendSwitch\('lang', 'zh-CN'\);/
+      /app\.setName\('videoCreator'\);\s*app\.commandLine\.appendSwitch\('lang', 'vi-VN'\);/
     );
     expect(builderConfig).toContain('CFBundleDevelopmentRegion: zh_CN');
     expect(builderConfig).toContain('CFBundleLocalizations:');

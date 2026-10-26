@@ -68,14 +68,14 @@ const selectCodex = element('select-codex');
 let currentState: BootstrapState | undefined;
 
 const labels: Record<BootstrapState['phase'], [string, string]> = {
-  idle: ['Preparing videoCreator', 'Initializing the desktop environment'],
-  resolving_codex: ['Locating Codex', 'Reading the shell environment and saved paths'],
-  starting_daemon: ['Starting the local Runtime', 'Creating an isolated videoCreator Runtime'],
-  probing_codex: ['Checking Codex availability', 'Checking the local Codex process'],
-  starting_runtime: ['Opening videoCreator', 'Loading local data and Codex capabilities'],
-  ready: ['Opening videoCreator', 'The local Runtime is ready'],
-  workspace_failed: ['Dashboard failed to load', 'The local Runtime is still running. Reload the Dashboard or restart the Runtime.'],
-  failed: ['Codex CLI is unavailable', 'videoCreator did not receive a valid response. Check diagnostics and try again.']
+  idle: ['Đang chuẩn bị videoCreator', 'Đang khởi tạo môi trường ứng dụng'],
+  resolving_codex: ['Đang tìm Codex', 'Đang đọc môi trường và đường dẫn đã lưu'],
+  starting_daemon: ['Đang khởi động dịch vụ trên máy', 'Đang tạo môi trường riêng cho videoCreator'],
+  probing_codex: ['Đang kiểm tra Codex', 'Đang kiểm tra tiến trình Codex trên máy'],
+  starting_runtime: ['Đang mở videoCreator', 'Đang tải dữ liệu và chức năng Codex'],
+  ready: ['Đang mở videoCreator', 'Dịch vụ trên máy đã sẵn sàng'],
+  workspace_failed: ['Không tải được giao diện', 'Dịch vụ vẫn đang chạy. Hãy tải lại giao diện hoặc khởi động lại dịch vụ.'],
+  failed: ['Codex CLI chưa sẵn sàng', 'videoCreator chưa nhận được phản hồi hợp lệ. Hãy xem thông tin chẩn đoán và thử lại.']
 };
 
 api.subscribeBootstrapState(render);
@@ -102,7 +102,7 @@ window.setInterval(() => {
   }
   const seconds = Math.max(0, Math.floor((Date.now() - Date.parse(currentState.startedAt)) / 1000));
   elapsed.hidden = seconds < 3;
-  elapsed.textContent = `Waiting for ${seconds}s`;
+  elapsed.textContent = `Đã chờ ${seconds} giây`;
 }, 500);
 
 function render(state: BootstrapState): void {
@@ -129,17 +129,17 @@ function render(state: BootstrapState): void {
 function failureLabel(state: BootstrapState): [string, string] {
   if (state.error?.code === 'CODEX_NOT_FOUND') {
     return [
-      'Codex CLI not found',
-      'Make sure codex runs in your terminal, or select the ChatGPT or Codex app.'
+      'Không tìm thấy Codex CLI',
+      'Hãy kiểm tra Codex chạy được trên máy, hoặc chọn ứng dụng ChatGPT hay Codex.'
     ];
   }
   if (state.error?.code === 'CODEX_PATH_INVALID') {
-    return ['The selected Codex path is unavailable', state.error.message];
+    return ['Đường dẫn Codex đã chọn không dùng được', state.error.message];
   }
   if (state.error?.code === 'RUNTIME_DATA_IN_USE') {
     return [
-      'videoCreator Runtime is already running',
-      'Another instance is using the same data directory. Close the other window for this version and try again.'
+      'Dịch vụ videoCreator đã chạy',
+      'Một cửa sổ khác đang dùng cùng thư mục dữ liệu. Hãy đóng cửa sổ đó rồi thử lại.'
     ];
   }
   return labels.failed;

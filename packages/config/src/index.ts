@@ -84,7 +84,7 @@ export type OpenCreatorConfigSnapshot = {
 };
 
 const defaultUiSettings: OpenCreatorUiSettings = {
-  language: 'system',
+  language: 'vi-VN',
   colorMode: 'dark',
   accentColor: 'red',
   customAccentColor: '#3b82f6',
@@ -277,7 +277,7 @@ function normalizeUiSettings(value: unknown): OpenCreatorUiSettings {
   return {
     language: openCreatorLanguages.includes(source.language as OpenCreatorLanguage)
       ? source.language as OpenCreatorLanguage
-      : 'system',
+      : source.language === 'system' ? 'system' : defaultUiSettings.language,
     colorMode: colorMode === 'light' ? 'light' : 'dark',
     accentColor:
       accentColor === 'neutral'

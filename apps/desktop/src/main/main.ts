@@ -48,7 +48,7 @@ import type {
 registerPrivilegedSchemes();
 // videoCreator fork: independent Windows application identity.
 app.setName('videoCreator');
-app.commandLine.appendSwitch('lang', 'zh-CN');
+app.commandLine.appendSwitch('lang', 'vi-VN');
 const APP_ENTRY_AT = Date.now();
 const DEVELOPMENT =
   process.env.OPENCREATOR_DESKTOP_DEV === '1' || !app.isPackaged;

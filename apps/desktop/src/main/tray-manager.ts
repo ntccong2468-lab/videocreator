@@ -23,12 +23,12 @@ export class TrayManager {
     const tray = new Tray(icon);
     tray.setToolTip('videoCreator');
     tray.setContextMenu(Menu.buildFromTemplate([
-      { label: 'Open videoCreator', click: input.open },
+      { label: 'Mở videoCreator', click: input.open },
       { type: 'separator' },
-      { label: 'New task', click: () => input.navigate('#/') },
-      { label: 'View running tasks', click: () => input.navigate('#/tasks') },
+      { label: 'Tác vụ mới', click: () => input.navigate('#/') },
+      { label: 'Xem tác vụ đang chạy', click: () => input.navigate('#/tasks') },
       { type: 'separator' },
-      { label: 'Quit videoCreator', click: input.quit }
+      { label: 'Thoát videoCreator', click: input.quit }
     ]));
     tray.on('click', input.open);
     this.tray = tray;

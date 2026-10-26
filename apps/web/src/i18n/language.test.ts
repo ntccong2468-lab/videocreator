@@ -12,6 +12,15 @@ import {
 } from './language.js';
 
 describe('display language preference', () => {
+  it('defaults to Vietnamese on first launch while preserving an explicit language choice', () => {
+    expect(defaultLanguagePreference).toBe('vi-VN');
+    expect(readLanguagePreference()).toBe('vi-VN');
+    writeLanguagePreference('en-US');
+    expect(readLanguagePreference()).toBe('en-US');
+    writeLanguagePreference('system');
+    expect(readLanguagePreference()).toBe('system');
+  });
+
   it('offers every supported language exactly once', () => {
     expect(appLanguageOptions.map(option => option.value).sort()).toEqual([...openCreatorLanguages].sort());
   });
@@ -87,11 +96,11 @@ describe('display language preference', () => {
     }
   });
 
-  it('defaults to the system and ignores invalid stored values', () => {
+  it('defaults to Vietnamese and ignores invalid stored values', () => {
     expect(readLanguagePreference()).toBe(defaultLanguagePreference);
 
     window.localStorage.setItem(languagePreferenceStorageKey, 'xx-XX');
-    expect(readLanguagePreference()).toBe('system');
+    expect(readLanguagePreference()).toBe('vi-VN');
   });
 
   it('persists explicit choices and applies the resolved document language', () => {
